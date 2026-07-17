@@ -74,3 +74,38 @@ def create_product(product: schemas.ProductCreate, db: Session = Depends(get_db)
 @app.get("/products/", response_model=list[schemas.ProductResponse])
 def get_products(db: Session = Depends(get_db)):
     return db.query(models.Product).all()
+
+# --- Invoices APIs ---
+@app.post("/invoices/", response_model=schemas.InvoiceResponse)
+def create_invoice(invoice: schemas.InvoiceCreate, db: Session = Depends(get_db)):
+    # Calculate remaining amount
+    invoice.remaining_amount = invoice.total_amount - invoice.paid_amount
+    
+    db_invoice = models.Invoice(**invoice.model_dump())
+    db.add(db_invoice)
+    
+    # Auto-update the Client's balance
+    client = db.query(models.Client).filter(models.Client.id == invoice.client_id).first()
+    if client:
+        client.current_balance += invoice.remaining_amount
+        
+    db.commit()
+    db.refresh(db_invoice)
+    return db_invoice
+
+@app.get("/invoices/", response_model=list[schemas.InvoiceResponse])
+def get_invoices(db: Session = Depends(get_db)):
+    return db.query(models.Invoice).all()
+
+# --- Daily Closings APIs ---
+@app.post("/closings/", response_model=schemas.DailyClosingResponse)
+def create_closing(closing: schemas.DailyClosingCreate, db: Session = Depends(get_db)):
+    db_closing = models.DailyClosing(**closing.model_dump())
+    db.add(db_closing)
+    db.commit()
+    db.refresh(db_closing)
+    return db_closing
+
+@app.get("/closings/", response_model=list[schemas.DailyClosingResponse])
+def get_closings(db: Session = Depends(get_db)):
+    return db.query(models.DailyClosing).all()

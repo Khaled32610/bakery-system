@@ -33,18 +33,20 @@ class Client(Base):
     phone = Column(String, nullable=True)
     current_balance = Column(Float, default=0.0)
 
-class Invoice(Base):
-    __tablename__ = "invoices"
-    id = Column(Integer, primary_key=True, index=True)
-    client_id = Column(Integer, ForeignKey("clients.id"))
-    date = Column(Date)
-    total_amount = Column(Float, default=0.0)
-    paid_amount = Column(Float, default=0.0)
-    remaining_amount = Column(Float, default=0.0)
-
-# --- NEW: Products Table (Bread Types) ---
 class Product(Base):
     __tablename__ = "products"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     price = Column(Float, default=0.0)
+
+# --- UPDATED: Invoices Table with Product and Quantity ---
+class Invoice(Base):
+    __tablename__ = "invoices"
+    id = Column(Integer, primary_key=True, index=True)
+    client_id = Column(Integer, ForeignKey("clients.id"))
+    product_id = Column(Integer, ForeignKey("products.id"))
+    date = Column(Date)
+    quantity = Column(Integer, default=0)
+    total_amount = Column(Float, default=0.0)
+    paid_amount = Column(Float, default=0.0)
+    remaining_amount = Column(Float, default=0.0)

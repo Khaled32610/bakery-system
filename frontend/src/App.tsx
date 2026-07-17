@@ -3,6 +3,8 @@ import Materials from './pages/Materials'
 import Branches from './pages/Branches'
 import Clients from './pages/Clients'
 import Products from './pages/Products'
+import Invoices from './pages/Invoices'
+import DailyClosings from './pages/DailyClosings' // NEW IMPORT
 
 function App() {
   return (
@@ -25,6 +27,12 @@ function App() {
             <li style={{ marginBottom: '15px' }}>
               <Link to="/clients" style={{ color: '#ecf0f1', textDecoration: 'none', fontSize: '18px' }}>👥 Clients</Link>
             </li>
+            <li style={{ marginBottom: '15px' }}>
+              <Link to="/invoices" style={{ color: '#ecf0f1', textDecoration: 'none', fontSize: '18px' }}>🧾 Invoices</Link>
+            </li>
+            <li style={{ marginBottom: '15px' }}>
+              <Link to="/closings" style={{ color: '#ecf0f1', textDecoration: 'none', fontSize: '18px' }}>📊 Daily Closings</Link>
+            </li>
           </ul>
         </div>
 
@@ -35,6 +43,8 @@ function App() {
             <Route path="/branches" element={<Branches />} />
             <Route path="/products" element={<Products />} />
             <Route path="/clients" element={<Clients />} />
+            <Route path="/invoices" element={<Invoices />} />
+            <Route path="/closings" element={<DailyClosings />} /> {/* NEW ROUTE */}
           </Routes>
         </div>
 
